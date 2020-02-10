@@ -1,6 +1,6 @@
 ---
 title: gyp fail
-date: "2020-02-29"
+date: "2020-02-09"
 description: Steve Holt! No, I did not kill Kitty. However, I am going to oblige and answer the nice officer’s questions because I am an honest man with no secrets to hide. I don’t criticize you! And if you’re worried about criticism, sometimes a diet is the best defense.
 tags: ["react", "js", "markdown"]
 cover: "./preview.png"
