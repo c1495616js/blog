@@ -2,6 +2,8 @@ require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
+const path = require("path")
+
 module.exports = {
   pathPrefix: "/blog",
   siteMetadata: {
@@ -12,6 +14,13 @@ module.exports = {
     siteUrl: `https://storyhub-minimal-tarex.redq.now.sh`,
   },
   plugins: [
+    {
+      resolve: "gatsby-plugin-root-import",
+      options: {
+        src: path.join(__dirname, "src"),
+        components: path.join(__dirname, "src/components"),
+      },
+    },
     {
       resolve: `gatsby-plugin-styled-components`,
       options: {
