@@ -5,7 +5,6 @@ require("dotenv").config({
 const path = require("path")
 
 module.exports = {
-  pathPrefix: "/blog",
   siteMetadata: {
     title: `Jerry Blog`,
     author: `Jerry Wang`,
@@ -13,6 +12,7 @@ module.exports = {
     description: `A Gatsby Blog`,
     siteUrl: `https://storyhub-minimal-tarex.redq.now.sh`,
   },
+  pathPrefix: "/blog",
   plugins: [
     {
       resolve: "gatsby-plugin-root-import",
