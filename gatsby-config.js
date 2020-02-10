@@ -5,7 +5,7 @@ require("dotenv").config({
 const path = require("path")
 
 module.exports = {
-  pathPrefix: "/c1495616.github.io",
+  pathPrefix: "/blog",
   siteMetadata: {
     title: `Jerry Blog`,
     author: `Jerry Wang`,
