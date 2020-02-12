@@ -11,3 +11,7 @@ cover: "./preview.png"
 ![](2020-02-12-11-42-39.png)
 
 - remove `package-lock.json` or `yarn.lock`
+
+## Ref
+
+https://github.com/nodejs/node-gyp/issues/1464
