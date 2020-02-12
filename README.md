@@ -2,7 +2,7 @@
 
 ## Add article
 
-in `content/blg` folder,
+in `content/blog` folder,
 
 - create new folder
 - put index.md
