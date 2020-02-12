@@ -9,7 +9,7 @@ in `content/blg` folder,
 
 ## github action
 
-I use ![gatsby action](https://github.com/enriikke/gatsby-gh-pages-action).
+I use [gatsby action](https://github.com/enriikke/gatsby-gh-pages-action).
 And there's a bug, so need to add in `package.json`.
 `"build": "gatsby build --prefix-paths",`
 
