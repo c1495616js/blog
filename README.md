@@ -2,10 +2,6 @@
 
 ## Add article
 
-in `content/blog` folder,
-
-run command:
-
 ```
 npm run new <title-you-want>
 ```
