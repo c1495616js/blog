@@ -4,8 +4,11 @@
 
 in `content/blog` folder,
 
-- create new folder
-- put index.md
+run command:
+
+```
+npm run new <title-you-want>
+```
 
 ## github action
 
