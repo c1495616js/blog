@@ -85,6 +85,7 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "now-build": "yarn run build",
+    "new": "cp -R ./content/blog/example $1",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
   }
 }
