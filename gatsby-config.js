@@ -12,7 +12,7 @@ module.exports = {
     description: `A Gatsby Blog`,
     siteUrl: `https://storyhub-minimal-tarex.redq.now.sh`,
   },
-  pathPrefix: "/blog",
+  pathPrefix: "/",
   plugins: [
     {
       resolve: "gatsby-plugin-root-import",
