@@ -38,6 +38,7 @@ Drone uses `webhook` to trigger deployment, received by `Drone Server`. And `Dro
 ## Installation
 
 // TODO
+[repo](https://github.com/CI-CD-Practice/Drone_Practice)
 
 ## How to write `.drone.yml`
 
