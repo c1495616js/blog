@@ -37,9 +37,47 @@ Drone uses `webhook` to trigger deployment, received by `Drone Server`. And `Dro
 
 ## Installation
 
-// TODO
-
 [repo](https://github.com/CI-CD-Practice/Drone_Practice)
+
+### Setup
+
+- copy `.env` and input your credentials
+
+```
+cp .env.example .env
+```
+
+- ngrok generate https for testing
+
+```
+ngrok http 8081
+```
+
+![](2020-03-20-19-35-11.png)
+
+replace `DRONE_SERVER_HOST=8e76ad03.ngrok.io` without `https://`
+
+- Generate RPC Secret
+
+```
+ openssl rand -hex 16
+```
+
+replace `DRONE_RPC_SECRET=`
+
+- generate github credential
+
+![](2020-03-20-19-40-18.png)
+![](2020-03-20-19-40-59.png)
+![](2020-03-20-19-41-17.png)
+
+### Start the App
+
+```
+docker-compose up -d
+```
+
+And navigate to `localhost:8081`
 
 ## How to write `.drone.yml`
 
