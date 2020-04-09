@@ -71,6 +71,10 @@ replace `DRONE_RPC_SECRET=`
 ![](2020-03-20-19-40-59.png)
 ![](2020-03-20-19-41-17.png)
 
+- add webhook to the repo
+
+![](2020-04-09-13-45-40.png)
+
 ### Start the App
 
 ```
@@ -118,6 +122,39 @@ trigger:
     - master
   event:
     - push
+```
+
+## Deploy to S3
+
+#### refs
+
+https://medium.com/dailyjs/a-guide-to-deploying-your-react-app-with-aws-s3-including-https-a-custom-domain-a-cdn-and-58245251f081
+
+http://plugins.drone.io/drone-plugins/drone-s3/
+
+#### IAM
+
+get access key id and access secret key
+![](2020-04-09-11-20-03.png)
+
+#### policy
+
+![](2020-04-09-11-17-47.png)
+
+#### S3 plugin
+
+```yml
+- name: deploy
+  image: plugins/s3
+  settings:
+    bucket: drone-react-pipeline
+    acl: public-read
+    access_key:
+      from_secret: aws_access_key_id
+    secret_key:
+      from_secret: aws_secret_access_key
+    source: build/**/*
+    target: /
 ```
 
 ## Drone Plugins
