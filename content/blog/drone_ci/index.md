@@ -143,19 +143,26 @@ get access key id and access secret key
 
 #### S3 plugin
 
+Because we are going to deploy the content of `build` folder, we use `plugins/s3-sync` instead of `plugins/s3`
+
 ```yml
-- name: deploy
-  image: plugins/s3
+ - name: deploy
+  image: plugins/s3-sync:1
   settings:
-    bucket: drone-react-pipeline
-    acl: public-read
+    bucket: <bucket_name>
     access_key:
       from_secret: aws_access_key_id
     secret_key:
       from_secret: aws_secret_access_key
-    source: build/**/*
+    region: us-west-1
+    source: build
     target: /
 ```
+
+## Use cases
+
+- create-react-app to AWS S3
+  [repo](https://github.com/c1495616js/drone_react_ec2)
 
 ## Drone Plugins
 
