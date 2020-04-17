@@ -166,7 +166,28 @@ Because we are going to deploy the content of `build` folder, we use `plugins/s3
 
 ## Drone Plugins
 
-// TODO
+>Plugins are just Docker containers which means you can write plugins in any programming language that runs inside a container. You can even create plugins using simple bash scripting.
+
+#### 4 Steps to writing Plugins
+
+- write the code
+- build docker image
+- deploy to docker hub
+- testing
+
+#### example
+
+[repo](https://github.com/CI-CD-Practice/drone_plugin_test)
+
+```bash
+#!/bin/sh
+
+curl \
+  -X ${PLUGIN_METHOD} \
+  -d ${PLUGIN_BODY} \
+  ${PLUGIN_URL}
+
+```
 
 ## Build Images
 
@@ -175,3 +196,7 @@ Because we are going to deploy the content of `build` folder, we use `plugins/s3
 ## Next Step? Drone + Kubernetes
 
 // TODO
+
+## Who use drone
+
+https://stackshare.io/drone-io
