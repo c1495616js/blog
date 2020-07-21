@@ -86,6 +86,7 @@
     "serve": "gatsby serve",
     "now-build": "yarn run build",
     "new": "cd ./content/blog && cp -R ./example $1",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
+    "publish": "git add -A && git commit -m \"publish\" && git push"
   }
 }
