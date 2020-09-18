@@ -31,3 +31,9 @@ IdentityFile ~/.ssh/id_rsa_jerry_github (file name from step 1)
 ```
 alias fw-git-clone='git clone --config user.name="jerry" --config user.email=jerry@freshworks.io $@'
 ```
+
+## Refs
+
+From Scratch:
+
+- https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
