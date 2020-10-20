@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Jerry Blog]]></title><description><![CDATA[A Gatsby Blog]]></description><link>https://storyhub-minimal-tarex.redq.now.sh</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 20 Oct 2020 05:53:54 GMT</lastBuildDate><item><title><![CDATA[Api Document]]></title><description><![CDATA[Demo https://c1495616js.github.io/api-document Repo https://github.com/c1495616js/api-document About We want to know how healthy about the…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/api-document/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/api-document/</guid><pubDate>Mon, 19 Oct 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Demo&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://c1495616js.github.io/api-document&quot;&gt;https://c1495616js.github.io/api-document&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Repo&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/c1495616js/api-document&quot;&gt;https://github.com/c1495616js/api-document&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;About&lt;/h2&gt;
+&lt;p&gt;We want to know how healthy about the codes and how database looks like.
+If we can have some tool automatically generating these reports while pipeline.&lt;/p&gt;
+&lt;h2&gt;Structure&lt;/h2&gt;
+&lt;p&gt;The difficult part running in github action is &lt;code class=&quot;language-text&quot;&gt;schemaspy&lt;/code&gt;,&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;We run &lt;code class=&quot;language-text&quot;&gt;backend&lt;/code&gt; first, using typeorm syncronize &lt;code class=&quot;language-text&quot;&gt;entity&lt;/code&gt; with database table.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Build Database
+  &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;file docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose.yml up &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;d &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;build backend&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;Generating &lt;code class=&quot;language-text&quot;&gt;jest coverage&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;typedoc&lt;/code&gt; is compared easier as we don’t need any database.&lt;/li&gt;
+&lt;li&gt;I found &lt;code class=&quot;language-text&quot;&gt;schemaspy&lt;/code&gt; in docker-compose won’t wait until &lt;code class=&quot;language-text&quot;&gt;backend&lt;/code&gt; syncronizing database, therefore
+we have to run two time docker-compose, first time is for generating database and table, then second time is generating &lt;code class=&quot;language-text&quot;&gt;schemaspy&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Generate Schemaspy
+  &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;file docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose.yml up &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;build schemaspy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Installing&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; i -D npm-run-all&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;.gitignore&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# documentation&lt;/span&gt;
+documentation/jest
+documentation/typedocs
+documentation/schema
+documentation/sonar
+.scannerwork&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Typedoc&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/03uvos3.png&quot; alt=&quot;typedoc&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; i -D typedoc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;in &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;compilerOptions&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;token operator&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&quot;typedocOptions&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;inputFiles&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;./src&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;mode&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;modules&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;out&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;./documentation/typedocs&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Schemaspy&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/Xl7xaUH.png&quot; alt=&quot;schemaspy&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add &lt;code class=&quot;language-text&quot;&gt;schemaspy.properties&lt;/code&gt; to your root folder.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;For Backend Api&lt;/h3&gt;
+&lt;p&gt;Using &lt;code class=&quot;language-text&quot;&gt;typeorm&lt;/code&gt; here.&lt;/p&gt;
+&lt;p&gt;The reason for having nest.js backend here is because I can use &lt;code class=&quot;language-text&quot;&gt;syncronize&lt;/code&gt; to create tables with &lt;code class=&quot;language-text&quot;&gt;entity&lt;/code&gt;, saving me some time to run migration during pipeline.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; i @nestjs/typeorm typeorm pg&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;add &lt;code class=&quot;language-text&quot;&gt;ormconfig.js&lt;/code&gt; in root folder of backend&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Docker&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;schemaspy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; schemaspy/schemaspy&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;latest
+  &lt;span class=&quot;token key atrule&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;UID&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;$&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;GID&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; postgres
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; backend
+  &lt;span class=&quot;token key atrule&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;-configFile&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;/config/schemaspy.properties&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; ./backend/documentation/schema&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;/output &lt;span class=&quot;token comment&quot;&gt;## where you want to output&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; ./backend/schemaspy.properties&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;/config/schemaspy.properties &lt;span class=&quot;token comment&quot;&gt;## read schemaspy config&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; backend&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Jest Coverage&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/RMPl2pT.png&quot; alt=&quot;jest&quot;&gt;&lt;/p&gt;
+&lt;p&gt;in &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;,&lt;/p&gt;
+&lt;p&gt;Setting this to documentation folder: &lt;code class=&quot;language-text&quot;&gt;&amp;quot;coverageDirectory&amp;quot;: &amp;quot;../documentation/jest&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt; &lt;span class=&quot;token string&quot;&gt;&quot;jest&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;moduleFileExtensions&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
+      &lt;span class=&quot;token string&quot;&gt;&quot;js&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token string&quot;&gt;&quot;json&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token string&quot;&gt;&quot;ts&quot;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;rootDir&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;src&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;testRegex&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;.spec.ts$&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;transform&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;token string&quot;&gt;&quot;^.+\\.(t|j)s$&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;ts-jest&quot;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;coverageDirectory&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;../documentation/jest&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;token string&quot;&gt;&quot;testEnvironment&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;node&quot;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;SonarQube&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; i -D sonarqube-scanner&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[我在加拿大 打工旅遊 成為全端工程師]]></title><link>https://storyhub-minimal-tarex.redq.now.sh/my-developer-life/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/my-developer-life/</guid><pubDate>Sun, 18 Oct 2020 00:00:00 GMT</pubDate><content:encoded></content:encoded></item><item><title><![CDATA[Minishift]]></title><description><![CDATA[Trouble Shooting Error starting the VM: Error getting the state for host: machine does not exist https://github.com/minishift/minishift…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/minishift/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/minishift/</guid><pubDate>Fri, 18 Sep 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Trouble Shooting&lt;/h2&gt;
+&lt;p&gt;Error starting the VM: Error getting the state for host: machine does not exist&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/minishift/minishift/issues/882&quot;&gt;https://github.com/minishift/minishift/issues/882&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Develop&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;install virtualbox&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;note: in system preference/security and privacy/ allow&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/sh6imjs.png&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;brew cask install virtualbox&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;install minishift&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;brew cask install minishift&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/gUNHLxL.png&quot;&gt;&lt;/p&gt;
+&lt;h2&gt;WebHook&lt;/h2&gt;
+&lt;p&gt;For using webhook in local environment from Github, we introduce the &lt;a href=&quot;http://www.ultrahook.com/&quot;&gt;ultrahook&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=--wNO4lV6WA&quot;&gt;video tutorial&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Install:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;gem install ultrahook&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Usage:&lt;/li&gt;
+&lt;li&gt;find the webhook url from minishift.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d07f1ae8f528f65e6a977c0d0d24a2f4/d9ed5/2020-09-18-14-17-18.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 32.43243243243243%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABCklEQVQY042R0UvDMBDG+9cIKm4t66atwtyb4N/uHuabL7Jua10FqW2aJmmSz+TciiIMD47kwt2P77sE0c0co0mCOJnjZb1F1miUTAHWwOJ/Ya2FUorOYLZ4xCS5R7p4QF4UEI5Six66V9RktKZGYwwl3a39BbOHmoBX0TXORzGi2R1Wq2cIzmmwYhxc9mDCgXtNA6LrsN5swDqJtm1RVdWg7JiBt3sxnjrgLZ6WS7SMQageu/cPfHIFrvSgSAiJLMtQ1zVlnucoyxJ7l03TUE8wjlMChtMUr9kOxj16hdp4axjs+NDOPncOjjvzKn3NnAgp5TfQw84uQ4QOXLztD7swf5b+E3zqc74AxCGr9RwUyIUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 09 18 14 17 18&quot;
+        title=&quot;&quot;
+        src=&quot;/static/d07f1ae8f528f65e6a977c0d0d24a2f4/fcda8/2020-09-18-14-17-18.png&quot;
+        srcset=&quot;/static/d07f1ae8f528f65e6a977c0d0d24a2f4/12f09/2020-09-18-14-17-18.png 148w,
+/static/d07f1ae8f528f65e6a977c0d0d24a2f4/e4a3f/2020-09-18-14-17-18.png 295w,
+/static/d07f1ae8f528f65e6a977c0d0d24a2f4/fcda8/2020-09-18-14-17-18.png 590w,
+/static/d07f1ae8f528f65e6a977c0d0d24a2f4/efc66/2020-09-18-14-17-18.png 885w,
+/static/d07f1ae8f528f65e6a977c0d0d24a2f4/c83ae/2020-09-18-14-17-18.png 1180w,
+/static/d07f1ae8f528f65e6a977c0d0d24a2f4/d9ed5/2020-09-18-14-17-18.png 2880w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;2.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;ultrahook &amp;lt;name&amp;gt; &amp;lt;webhook url from minishift&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/9f154b29b803b3660f93f72325a2a3e0/48ca3/2020-09-18-12-35-25.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 35.13513513513513%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABiUlEQVQoz42RSW8TQRCFmzDJjGffF2zPjDNWuIQjgUsMHIBRAMkW5BCH4CAMQYiIAJGQWAT88o/uRuLM4anqVXe97qon/CRgNBrTtC3T6ZSqqmjbCePxmDRN8X1fxowgCCjLUudlWZHlOVmWMRwOKYqCXHJ1X2RJzPBaSZlnpHFEkadEgYdtbbEhBJa5iXH1CkLm/4XZ/SfMj9Y8Plxx8PSEfrGkny9ZLGXt2YrZgzn7ErfuHrB3p2dv1nP73iNu7j/EMORjhoFlWf+i6BfPef3xJy/Pv7F694UXEsdnl5y+/8r64gcnby91/ezzb159+M7R+oI3n35xeHqOaVq4rqNH9zxPr0cEnktVZHrMNIkIfZfAc3TM0xjftfVZ4Nm4tsWmsaGjtWUQRaEWUUiShDAMEcqM3d0b7Oxcp5OmTCYTtrc7mqbRRhVFKfOWum50o207UiiWJoXEcaxFoijSv1RcKJe6rpNOj/6KSNR1rbmCalDuKvfVjkzTlKI2g8EAx3F0TXHXdTX/A6EzwWTK8iH/AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 09 18 12 35 25&quot;
+        title=&quot;&quot;
+        src=&quot;/static/9f154b29b803b3660f93f72325a2a3e0/fcda8/2020-09-18-12-35-25.png&quot;
+        srcset=&quot;/static/9f154b29b803b3660f93f72325a2a3e0/12f09/2020-09-18-12-35-25.png 148w,
+/static/9f154b29b803b3660f93f72325a2a3e0/e4a3f/2020-09-18-12-35-25.png 295w,
+/static/9f154b29b803b3660f93f72325a2a3e0/fcda8/2020-09-18-12-35-25.png 590w,
+/static/9f154b29b803b3660f93f72325a2a3e0/efc66/2020-09-18-12-35-25.png 885w,
+/static/9f154b29b803b3660f93f72325a2a3e0/48ca3/2020-09-18-12-35-25.png 1084w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;Add the url from terminal to the repo.
+For example: &lt;code class=&quot;language-text&quot;&gt;http://granthook.jerrywang.ultrahook.com/&lt;/code&gt;
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/79db3acd5418d483e47b98a9e3bd89e7/daf05/2020-09-18-14-22-26.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 31.756756756756754%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA7UlEQVQY02VRa4+DMAzj///Huw+TTnA3oPT9oMXnZmxiWiTXDThxAsM4a3xNHt+Tw+0eYHxGzgUxZaQLP++ByGVH2SuM8/AhwvkgbKzDEGKkMMHyZUoR4SJIOUseYpLcagOjNtTasLNhbeT6jgGM1F1ZfPB+8Gg8jPWYV4VV6ddk8UQ3CMIXMC/7/mhorMU4TbJqj+68cpKFDXWfiqts5G3TZA2lLRYTcd8ClA2INOhb1ueE5hRCJjwE87JCKQXP9S0Ncyli1AjR4TN6nTSMgUXOybr9YWsHfn4XjH9smPjxPX9KqW+Gp/iVSx3xD6xW07jbLH2oAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 09 18 14 22 26&quot;
+        title=&quot;&quot;
+        src=&quot;/static/79db3acd5418d483e47b98a9e3bd89e7/fcda8/2020-09-18-14-22-26.png&quot;
+        srcset=&quot;/static/79db3acd5418d483e47b98a9e3bd89e7/12f09/2020-09-18-14-22-26.png 148w,
+/static/79db3acd5418d483e47b98a9e3bd89e7/e4a3f/2020-09-18-14-22-26.png 295w,
+/static/79db3acd5418d483e47b98a9e3bd89e7/fcda8/2020-09-18-14-22-26.png 590w,
+/static/79db3acd5418d483e47b98a9e3bd89e7/efc66/2020-09-18-14-22-26.png 885w,
+/static/79db3acd5418d483e47b98a9e3bd89e7/c83ae/2020-09-18-14-22-26.png 1180w,
+/static/79db3acd5418d483e47b98a9e3bd89e7/daf05/2020-09-18-14-22-26.png 2672w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Ref&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://docs.okd.io/latest/minishift/getting-started/quickstart.html&quot;&gt;https://docs.okd.io/latest/minishift/getting-started/quickstart.html&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Object without specific key]]></title><description><![CDATA[We can do another way to have same as below. Just use destructure: And since there’s , we need to add a new rule in .]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/delete-keys/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/delete-keys/</guid><pubDate>Mon, 20 Jul 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;We can do another way to have same as below.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ts&quot;&gt;&lt;pre class=&quot;language-ts&quot;&gt;&lt;code class=&quot;language-ts&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;delete&lt;/span&gt; dto&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;password
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; update&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; Partial&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;UserEntity&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;...&lt;/span&gt;dto &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Just use destructure:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ts&quot;&gt;&lt;pre class=&quot;language-ts&quot;&gt;&lt;code class=&quot;language-ts&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; password&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;...&lt;/span&gt;update &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; dto&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And since there’s &lt;code class=&quot;language-text&quot;&gt;unused variable&lt;/code&gt;, we need to add a new rule in &lt;code class=&quot;language-text&quot;&gt;.eslintrc&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;rules&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token string&quot;&gt;&apos;@typescript-eslint/no-unused-vars&apos;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;warn&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; ignoreRestSiblings&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[The Victim's Game 誰是被害者]]></title><description><![CDATA[Netflix…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/victim/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/victim/</guid><pubDate>Wed, 06 May 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Netflix 出品的電視劇： 誰是被害者&lt;/p&gt;
+&lt;p&gt;一開始抱著推理劇，加上是台灣出品，就想追看看，想知道是不是有很複雜的推理。
+畢竟對我們用邏輯思考的人，難解的謎題是最迷人的。&lt;/p&gt;
+&lt;p&gt;往往我只在乎 如何找到兇手，如何解決難題，但都沒有去想過 兇手是怎樣的人，他的背後有什麼樣的故事。
+人家說可惡的人必有可憐之處，習慣於邏輯的思維的我，也彷彿讓我在主角身上看到我的影子。&lt;/p&gt;
+&lt;p&gt;隨著劇情的前進，患有亞斯伯格的男主角，在還原所有的謎題時，也漸漸找回那屬於人類的特殊情感，原來人都是需要被理解，被關愛的。&lt;/p&gt;
+&lt;p&gt;其實…我們才是自己的被害者。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Youtube in background for IPhone]]></title><description><![CDATA[Abstract: Want to share how to play youtube in background without any app if you use iPhone.
+分享一個 iphone 用 safari 開啟 youtube…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/youtube/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/youtube/</guid><pubDate>Tue, 14 Apr 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Abstract:&lt;/h2&gt;
+&lt;p&gt;Want to share how to play youtube in background without any app if you use iPhone.
+分享一個 iphone 用 safari 開啟 youtube，並在背景播放音樂的方法。&lt;/p&gt;
+&lt;h2&gt;Steps:&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;settings / shortcut (設定 / 捷徑)&lt;/li&gt;
+&lt;li&gt;Toggle the switch on “Allow Untrusted Shortcut” (開啟 允許未知的捷徑)
+If you don’t see this switch or it’s disabled, you could open the “shortcut app” and click on any shortcut.
+(如果你沒看到這個選項或是他是鎖住的，就先前往 shortcut 這個 app，隨便點一個來用）&lt;/li&gt;
+&lt;li&gt;install this shortcut via the following link. 點擊這個網址來安裝這個捷徑(&lt;a href=&quot;https://www.icloud.com/shortcuts/cac7206e04eb49138e7dda8f317a2348&quot;&gt;https://www.icloud.com/shortcuts/cac7206e04eb49138e7dda8f317a2348&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;open safari and navigate to youtube and click on sharing button. (使用 safari 並前往 youtube 網頁 並按下下方的 “分享” 按鈕)&lt;/li&gt;
+&lt;li&gt;select the shortcut we just install from step 3.
+(選擇我們剛剛步驟 3 安裝的捷徑)&lt;/li&gt;
+&lt;li&gt;play youtube and go back to home screen
+(播放任意影片，並回到手機桌面)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;go to the control panel and play
+(右上角拉下來進入控制中心，並播放音樂)
+這個捷徑我看過 js 程式，非常安全。&lt;/p&gt;
+&lt;p&gt;If you want to know the theory behind this, please refer to the repo.
+&lt;a href=&quot;shorturl.at/agX69&quot;&gt;repo&lt;/a&gt;
+and article:
+&lt;a href=&quot;shorturl.at/dnJU0&quot;&gt;article&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2&gt;Images for steps:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;step 1:
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d79a97795c129a843abefc83aa4d3330/3d4b6/2020-04-15-10-57-16.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 183.7837837837838%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAlCAYAAABCr8kFAAAACXBIWXMAABYlAAAWJQFJUiTwAAAEmklEQVRIx51WTW9bRRR9KSpJk7o0ie3Y79vOe37+yvNX4vgjdmI7ttPEieO0SqOilooFgkYIBREJCUEXLFjzC9gjWLBAYgMLxI9ALFElJMSCNZvDveM4wkDrvC6O5o09c+aeOzPnjuTkEshUcyi3NrBeLSGVXkE65SJFSCbTiMeTcGIJgZhAXMC2HaTTLlZWMshk8oQcIpFlSE7WQaG+isOTAfYPelhJp2mQK5Am8ng8QZNjgsBx4qLPi3C/Wt1ArVbH1laDvmtEGIUUz8SRWE3Bcm04ibggSaWGSCZTYuVCYQ25XEFE5DgJgRGpZcWwvGyLqKNRC1JyNYnsZg5uNQO3wOEzsnDdLBKJFNrtLo6PT3By8gDd7h1Bwr8zIbcjcHqYWDLtCBRDhR41sWxbWLasy1UZphmFrpui5Rw9DxydpumQ5LCG7d02sgUXiqxDUTSEwwpUVb+Ephlj/f8DLxoOy5B03cZ3P32Ld84eo1rZxMOHjyjJTUHMRFcBE7IqWVYgcWe9WCGpcahEMkquLKueSBmsTJJpEhMZmimS+89d43YkeVKEnGNByFE4TpKIHGxs1LGzs4t+f4DDwyPU61ti0FVyyIsLyUJaKAglHEYwGEbAH0QoJHuWzKQiQtOM4Ozzr7Fz9zHcVIqi3BSH2EvumGyYdyaMRHD62VdoHryBcrGIXq8vpF8ld/8mHG4KSTN0FZqqYmHBj9u3F+An2V4iHJMcoWT+/P2POD99D/m1IlqtNkqlymX+Jm3GfzZF0yN4+v45dunOrtD9ZblsBl4ljx2bmJ2AScTBYAiLiwEEAkueCMcOdpTc469ff8OnH3xIktfFGTw6uifchPN7VdljV693MEC+UESEwmYHZt9jCV6i1EmhiFDTDRztd1As5ASBoqgXkZGDeJBrGJFhhIpm489fvsEn528jm6+gt9cnI92jARZCZG0yWVp4EsI6eWKMck+E/Ts2ju/m0d9Nolk30W1a6LZsbG9GBDrU7zSWX4g2YadloUXzpQf3EqilWyjQkalWXJSKLtaoxhTX0lgrJJGMG0glzAkw4KYtDPaIcLdNVW/1LVixBipksJ1OH7V6B83WHirVJvwBFcElYwJ0yIpNkXKEgygq6zKaGyrq5TBqpbBo62VZoFnT0NiYjFZdQ69NOZx+dQo3ZiTM3pDgu/kKbhG49c1dE7g5N0W49mLMTomx169PQZpfCNAtiSK0pMB3ax4+3xDz8wHwf6K9ChaCwlgki14Ffzz7HR9/9BTFYgn7+300Gi1RGrmSGYYp2ufBuGhjMUcYisT15OT1N1Eq14Rj5POrosjzoKs6zVgZVRUDnWoWmZU4nfjhaecS4NX+h4S0KXbEwQ9ffoHTs0col+oYDI5wcHAoLOylzIEjyaxWYcdSYgXOHUvnu+nVwobmQB/3j++jXK6IVfjJNnpVeSG7NFj+ePLkXWxvd4X17+3t004fiFLgZWNY1aVjJxwHUXosyjK/IoYPplGi2ecmw7ywL5VfXwp6JROurWDBv0RlYEmUgEAg6BFLVD4WIfn9AdyiE+7zvYa52TnMzMxgenr6pfE3nrkmQuT4GvUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 15 10 57 16&quot;
+        title=&quot;&quot;
+        src=&quot;/static/d79a97795c129a843abefc83aa4d3330/fcda8/2020-04-15-10-57-16.png&quot;
+        srcset=&quot;/static/d79a97795c129a843abefc83aa4d3330/12f09/2020-04-15-10-57-16.png 148w,
+/static/d79a97795c129a843abefc83aa4d3330/e4a3f/2020-04-15-10-57-16.png 295w,
+/static/d79a97795c129a843abefc83aa4d3330/fcda8/2020-04-15-10-57-16.png 590w,
+/static/d79a97795c129a843abefc83aa4d3330/3d4b6/2020-04-15-10-57-16.png 712w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;step 2:
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/bfb31d38e3501ecd303a2199cb957418/cab8c/2020-04-15-11-03-02.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 176.35135135135133%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAjCAYAAACU9ioYAAAACXBIWXMAABYlAAAWJQFJUiTwAAAFdUlEQVRIx62WyW4bRxCGhxwOdw6Hw22Gs1HcJFuURInb0KSoXZRsWUgOMZxDAMdIggBZbg7g5BQgNgwEyC0PkFseIEDgB/BL5JQHyDv8qeohGVneEiAEPlR3T3d1d1V1FaVoNApVVVEqlWEYBrWzSKfTREbITCYzRxUy+BaM5/N5QalUQjabhaIokOLxOA3q2NnuwB8OSGkZWU1DLpcT8GYML2AW46yo3W6j1Wqh0+mIw/DhpHgigULZharT6XJl5PIlaKRwgeM4cF0XlmWhUqm89I034pPzbXiTWCwGKZnKwKz1YNYHxBBldwM5jU6i62KR7/uYTqfwRz663R59yy1PqdMcXc/P0QOF4XCY7h6BEiEZkYUdrsLfQ6EQZFkWXP9+fa5EP/zPSMIJrltFuWyQzVwysEnXzYk+e79UMlAoFP+dQkWJIkWOUdMpUqKTkbNkbA2ZtCpkIV8UynS9gFQqvSSRSCIeTwi4nSJfKBEKm0QsgoMPf8Dxw59RW6mh3x9iZ6dHDugL6TgebMuFbXviFq5ThefV0F7fIjaxubGNZnMV9VpTeFtKxhVM3v8Gu/ef0IQ2jo5PMJud4/z8Dk5OZrR4JVA0hzfw3BVstLdp8xFtOiCFa1hZaQQKI3TMSFiCTPePRmMIyxHyZoQ8JgtisfhrYVPxWoWCma/McBSIsJFlBaHwP0oYVrpY9DZCUnjpEKGQI/3GjXWsr2+gXm/h5k1+TnyFOtnNfSN8daviYOeDLh799AjHp6fiABJ7bDgc4ezsNi4u7mJ//xB37gSSF1613XVs08Xs2Qwv/nqBL776MjhpNqvBNC0KjZKIt2IxiDvGMCoCblcq9qsKyfuWYSNvFSlmTah02+UJJ5Mper0BDg6OMB5P6A3fEuMsj45OsLW1/YpSy3Rw/P0Rnv/5HJ9+/hmdMMQ2zIiYYyWdzg5GpMD3RxgMhgQlBIrFvb19bGxskQk483gCzyOldEL/Yx9Pf3mCi8u7QfqShJfkuafCwS4vsfCiTJEQpUShCClJ9CqkyJXv8/WjnobuZgY9ojunt6UKFu1+JxuMzfs8Pu5rOLilo9dRcTwtYrCtYf9WDpJtKPRONTQbVXo+HqqeTdex6DVYWKnaoq9mEogqEuKxMMkQBbGMB/csPH28im+/ruHZ4xa2bmZoY3oplpFBPJGlx60SXE80gmRGQzKpEhl6GUmyT0KgKAkx5lh5uHYRDa8A00qJJOF385BqXh7dnk+ePBZOYMbjXSH39g4oW+8Lz49GY4wpEsbjKdbW1mFWXJiGi+l3R/jtj9/x0YNP0N/OQmrVCvRKNmnimJQMKDw6cw8PRerv9/voEf3+gMLIx5BKQqu1Csu2YVMY+Q8H+PHXZ5jdvsCuX4B0OCnicGKRYW0yqiHk0a4lmPqloD+h8d0KzTNE+2TPwtmBg/NDD7OJh147jUFHw+VpJcjYXL04rgzK0KZZIUw4ti2yN2fsstWAabdQNFdgOmsoGJTdrSYVMkMUswjX46slQNXKsLwbsBxaVPZQNuukoAHHWxVZO5H1kNKbSKgOkrk6kpqHdL4BJZ57Kf2HFgqjqRItaCFBk1N6A7GMTUqqtLgJOar+tyLFOSwihxEOSQLeZdGWw6F5iYy+hWtllPNhvdFCrd4U4cB5kfMhU63W6B+D8044zVWpznCikbgOcMzdu3cfl5fv4fT0DLcpBLjNsceTua68Cc6V1Wpd1BVRU7gW5HJ5QhcOSIvymRX/WThXcn1+F4t5XGuoSEXmNSSoIwFBP6gv4SWhUMDr+ixFTeE/OG+qbO8mdoWgL66cTF4nJUilAoJ+clkuF/MW/atIbC+2wevQxF83fWknnhvMDwj66nKc238DzvyEHpq0FvwAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 15 11 03 02&quot;
+        title=&quot;&quot;
+        src=&quot;/static/bfb31d38e3501ecd303a2199cb957418/fcda8/2020-04-15-11-03-02.png&quot;
+        srcset=&quot;/static/bfb31d38e3501ecd303a2199cb957418/12f09/2020-04-15-11-03-02.png 148w,
+/static/bfb31d38e3501ecd303a2199cb957418/e4a3f/2020-04-15-11-03-02.png 295w,
+/static/bfb31d38e3501ecd303a2199cb957418/fcda8/2020-04-15-11-03-02.png 590w,
+/static/bfb31d38e3501ecd303a2199cb957418/cab8c/2020-04-15-11-03-02.png 744w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;step 4:
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/1d412b2b399528ec5b350f188a1d1085/2e237/2020-04-15-11-03-20.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 189.1891891891892%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,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&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 15 11 03 20&quot;
+        title=&quot;&quot;
+        src=&quot;/static/1d412b2b399528ec5b350f188a1d1085/fcda8/2020-04-15-11-03-20.png&quot;
+        srcset=&quot;/static/1d412b2b399528ec5b350f188a1d1085/12f09/2020-04-15-11-03-20.png 148w,
+/static/1d412b2b399528ec5b350f188a1d1085/e4a3f/2020-04-15-11-03-20.png 295w,
+/static/1d412b2b399528ec5b350f188a1d1085/fcda8/2020-04-15-11-03-20.png 590w,
+/static/1d412b2b399528ec5b350f188a1d1085/2e237/2020-04-15-11-03-20.png 790w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;step 5:
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/7bc64b9cbafc442be2da7ac9bb93ed44/f8915/2020-04-15-11-03-34.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 197.2972972972973%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,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&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 15 11 03 34&quot;
+        title=&quot;&quot;
+        src=&quot;/static/7bc64b9cbafc442be2da7ac9bb93ed44/fcda8/2020-04-15-11-03-34.png&quot;
+        srcset=&quot;/static/7bc64b9cbafc442be2da7ac9bb93ed44/12f09/2020-04-15-11-03-34.png 148w,
+/static/7bc64b9cbafc442be2da7ac9bb93ed44/e4a3f/2020-04-15-11-03-34.png 295w,
+/static/7bc64b9cbafc442be2da7ac9bb93ed44/fcda8/2020-04-15-11-03-34.png 590w,
+/static/7bc64b9cbafc442be2da7ac9bb93ed44/f8915/2020-04-15-11-03-34.png 748w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;li&gt;step 7:
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/4de012d418b5d6f3483a57fff50b91e6/27524/2020-04-15-11-01-43.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 212.83783783783784%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAArCAYAAAB4pah1AAAACXBIWXMAABYlAAAWJQFJUiTwAAAK1UlEQVRIxy2X6W+j13XG+S8U/dAPTjyw60lm02g00lASKYkUF3HfRVEkRYo7RXEXF1GUqF2jXbOP5PF4No9nHMcTJxO0dWoUzocWiRMkQRYgKIq0KVoUCNIFBQq0RVH8esbuh4P7vpd4n3vPOc85z6HioiZGty7DJUOOXmsJpbOByr+IZmqTsdQRtsJtHJW7uOaO8VTv4ihcx5zYQh9YQOssMWLNojWn0I7F0RpiKC4J2GVjnl5zmSuOOirvIsPBdXTxfSy5OwL0Lu7mQ7ytR/jnHwjoCbbsAWPhVXTeOlpHEb1tFp05g86UfgWYEsAcfeYiSgEc9LYFcO3/AW/hrL4jgA/wCeBE6wHeuRPsM4eYplbQ+eqMOl8B5tBbMoyaUih6jSmuWPL0O0qofDWGJ9toIusYUwc4infxCVig/R7h5feJrj4lvPQAf+UW9uQWllAbs28Ok6uIyZHDaMuiGLBnUHvyqCfy6GJV9ImmgK3gzO8Tmr9Hcv0pme0Pye19SOnwOcXdJyQ7J0yW9vGllvFMNXBPVnD4CtgER6ENzGCcLpJcXmN2f5vC/gH57RtUr75NffsxnVsvWDl5yerJx2weP2Pj9kOaO8fk2kc0Vm/S2bhBpb5FIFxhPFhGYUrkcBYqZPaWyd9dp3C8Te7gkIVr73L90bd598VnHH/wF9x68qfcf/9j7j15xv7JY9rbJ9SWjqg2tyiUl4klGoQjcyhsyVncAmguxHDU4mIpHKUi4UKHcv2IhfUTDh58hztPP2Fl55a871BqbxIvLhNK1JgIz+KfyBCL1UnEmyhcsQJjk0neUCo5Y9RydszIm70aep12nHtBhqf9jEusyhvHDOi9qIxe+jQOLg3auHDZyIWLGvSjXtyOOLnUIgrvVBGjc5qzSj3x2iKx2gpn+h1En6U4/O0eue8VsSQb5Du3SJeaZCvzxHM1/FN54qk50skKdtMEXlOY+dwaismpMjZXjEtXjMTSDSLpFuevuPDdjrL863kiH8xgjrUodG4Qn8mRK5ZIZYpEorNkknOUMg38Fj8JV4KDuT0UU+ESHk+KnosDqIadDAy56OrR0zViR13K0O2MYIksUuwcMWZzS6zcLDeN1PNmVqpjlMNWHIMW6pMZHokXinBQAO0RiUkIdflXqEo/p1sdpNt1nf7q7+me+hjbdIvy4jXxJMJ8LUyz4mc6NEMxNsnVqpfAiIelqRwvNu6iGPfmselcnLfdJvQ2BI7hgu0GfflfkX0P1O1/wxwWjlY28flzrC3lKc8GuXP7I9JT01xvx8jYkrQl29/afAeF25FmTOvj7Dkbl9M/pjf1Q7q6LJw3baKs/yPnxh+jd2ZJ55YZUpmIi4vLdSOlrIfFsplW1opZaacZLvLB9iMUVrNwz5JA22vAqDRjGbChVVpR66Ko/UsM+ZtESgcsrV6jlEowP5tkrZllqZ5na6nFWq0joAvcXL7NQylLhV56mMmUZKjfyWC3Dp0ABoMLWKY2GAisoJneJdq4y8qGkDyfYrUUY6vV4BtPPuLw6jGbrW3WpVpu7z7i+OgDqWVjgj51gK+80YfO4OP0GTX9o3G+PhjhrDbJV5RBBmwzhGMlNP292LUD2Md07OwcEQgkcDmDmMbGyeY63Dx+iWJoLMXFwXFOX9DQbG/RfcXEpaEQpy66mW3uYw3OcVHePYECgwNajHoTYxY3rfUbeCN5XJNZTJ44sdK6lOgnKNTirlIX4fWvqTgnLp+SVSMt7fJIkDOXrXRJwLUSY4uwoUsOU456UFtCFNaPMUkiDBNZRjwJwrVtdt7/DIXKFEPnyDJkDKActjNs8KN3xDC605hdSRyeNPHsCqNCjdfOaXlL6eCsRnjYucvQRI4Bj1zIEWWyvsPuR3+JQuNIoTZN8dY5JX0DI5ztVnKhT0PPgJF+tVmKX82wzo8/LokKV7EnFvDkV8gKRWzZtlgLa6pGRkh98O3PUQzbRVM045zpUhGNz6A3uxmzT+KeSGL3ROju03H6oo7jb3yfH/39f/Dwkx/zy3//H04+/Rk//N2/8s3Pf8FPf/8vfPrX/8DOh3LDQYlhjzbIH53qoUs+vtA7Sq/aRr/WjVralVoyf6rLwOHjT/ntf8LPfvdf/I2s119+zq//+3/5O+CfxT77zT+x9/z7IlKGOEqRv/MqH1/vs3F+0M25QQ/n1T66hwNfHDbkKjAhGnPw9DPefvkjjl78FfnDFxx/7ye8/MXf8vLnv+H4uz9g9/1PUfQZhIf6JG9eMvNmj4m3LlvQuGbo1Yd5o9sk+1aujAnx3WW+2m3l9csOuk0J4iv30Ufm6TJFUXmylLfeYe/JK9pYU1zShviDr/YwKeR97WsDcjMfb0rchqVxvsr+6V4bFzVBode4SMCRtDafJKfDoD0qOvOCVHkRV6zB7v3vSqW4MvQZQvyhAI6Hc7z2x0quSJJOd+tFb6PCwdAXoege8aMyjLN77USI7sIWbTBii/D8o5cUm2tYRfU27ryQWnalZZwQly+O8tYF7RemcyToHfby+tlhTp0fQWkIMuabFZJb6FbZGDRMkKrtyF6aHumFA6YQ8foe7aPnKIxOIbAvj9Eryu/KYvbOYvUXsU4UMfvzWCalAUfrTCZaIg8LRHOLZOa2KLavUV27Q3PrHq2dB7T236O+91h02Z3CMp7D4sthHZ+VNf+ljRewT5RwiSu+6ByheJ3pzALJ/LLEbJ1cY09k4QYNSUZr9yHzOzIASMdROPxZ3MGCFHn+SwvkcUwWvjBXsIhPRCwYmyOaakoJtkXxlkgWV5mpb1MSWWhIhSzs3Gdx710Wdx+IBITyBKIVsRITkRL+Vzb16rnMpOxH4lWS6TozuXly+QVmCovMlFcoyvjRWNynI11nY/sOW3snbO2fiEhFClJyVbFXH39pr57jiQqpVJXZ7ByVfINGqSXitECjukhTuvTi/BrrnS32Nna5uX3Inf0j7h5cQzEdzZOUjxNiyUSZVLJMNlUmn6lQzVVpFmqiHU2RzHlWawus19tszi+y2+5wfXmFexvrPNnd5PnhVT68toMiGs6QiL0CzZNOFcim8xQyBeayJWn5FTqlOVYrNdarNTbrNbabdQ7m69xcaHCv0+Lpeptv7S7yJ0cd/uz6CoqJiTBTUzFiqSTJQoaM2GwuQz2Xo1Mss1apslIpsVydZbWZ42prlsNGjhv1We7N53m2VOY7GxU+2Znjzw/qKOxeF96wn1BxingnQXIpSaaaZK4sGtyoCUCdlUaBZjPJgvy+tppga36a7VKEazKx3a+meNpI86wttpRBYfCYsU458TcDTO/LTXdjJES8y80C68vz7K616LRF3BemqWxFZNiMUF+YZG7Gx0IiwGYqzE4qxGZigrXEuDRYq0jnhAl7xc3EZpDAeohJGTcylSytdo3lpTpz9QzJaoBYx09yzU+s6pQw2Yj7nWT9HmY8LhI2CxGzEYVSM4zKpEUbMmLK2TDnHFL4HuFhSKasNDPZFNFYUBRO5sW0GdeMHD5lwGrX4TQacOvHcGoNWFQajAPDKHr6BqVDD0mBaxjy6hhxG9BaTZhtTnyeCca9ARx2OwarnlGXhlHPMBrLEFrNEHrVCPoB2VOOMHxZhbp7UP6n9A5weXCIfsMww049Iw49Grm6yeLA4/ThdfuxW+2iNTrpSuKJc4SRsSE0w0PoBkfQ9WtkdBlhqEeFSkbC/wN6gEsU5GYP0gAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 15 11 01 43&quot;
+        title=&quot;&quot;
+        src=&quot;/static/4de012d418b5d6f3483a57fff50b91e6/fcda8/2020-04-15-11-01-43.png&quot;
+        srcset=&quot;/static/4de012d418b5d6f3483a57fff50b91e6/12f09/2020-04-15-11-01-43.png 148w,
+/static/4de012d418b5d6f3483a57fff50b91e6/e4a3f/2020-04-15-11-01-43.png 295w,
+/static/4de012d418b5d6f3483a57fff50b91e6/fcda8/2020-04-15-11-01-43.png 590w,
+/static/4de012d418b5d6f3483a57fff50b91e6/27524/2020-04-15-11-01-43.png 646w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Drone Learning]]></title><description><![CDATA[Drone Introduction We love docker. And Drone builds anything in docker. Drone is a CI/CD tool built by Golang. It’s light weight and fast…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/drone_ci/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/drone_ci/</guid><pubDate>Wed, 18 Mar 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;&lt;a href=&quot;https://drone.io/&quot;&gt;Drone&lt;/a&gt;&lt;/h1&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We love docker. And Drone builds anything in docker.&lt;/p&gt;
+&lt;p&gt;Drone is a CI/CD tool built by Golang. It’s light weight and fast and easily built with &lt;code class=&quot;language-text&quot;&gt;docker-compose&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Build anything in docker. When building completed, it deletes all containers and left no garbage file in machine.&lt;/li&gt;
+&lt;li&gt;Easy to learn and maintain.&lt;/li&gt;
+&lt;li&gt;Use &lt;code class=&quot;language-text&quot;&gt;.drone.yml&lt;/code&gt; to trigger CI/CD pipeline, which means you can have version control.&lt;/li&gt;
+&lt;li&gt;Using container to run all steps of pipeline, so it supports every language.&lt;/li&gt;
+&lt;li&gt;Widely supports many repository services, like &lt;code class=&quot;language-text&quot;&gt;gitlab&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;github&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;gitea&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;bitbucket&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Structure of system&lt;/h3&gt;
+&lt;p&gt;Drone uses &lt;code class=&quot;language-text&quot;&gt;webhook&lt;/code&gt; to trigger deployment, received by &lt;code class=&quot;language-text&quot;&gt;Drone Server&lt;/code&gt;. And &lt;code class=&quot;language-text&quot;&gt;Drone Server&lt;/code&gt; will allocate job to &lt;code class=&quot;language-text&quot;&gt;Drone Agent&lt;/code&gt; to execute pipeline.
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/08973d5115085897ab41a11cd45590e9/5f652/2020-03-20-06-01-13.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 85.8108108108108%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAABYlAAAWJQFJUiTwAAAB+0lEQVQ4y5VUPYsiQRSc2FC40EQDMzH0B/iBCJ6CyQYaCAYe+BeEAzc7kIuFS0U5EANTL9VEBRMzFb31RFf81hlnus5u742zOzu37IOe6elHV9errjcSLIIxJt7n8xnT6RTz+dyUeyskKzBN08S8WCwiGo0iFAqhVquJNZ6zArUEVFVVzNPpNOx2O5xOJ8rlsljjuQ8BEgsenU4H2WwWHo8Hg8HAxJCqoW/pf/oR6HK5RLVatcwbSVgCGjdR+W+BHY9H9Pv990s2gh4OB6zXa9OFDYdDeL1e2Gw2xONxAS7dNt40YK+0ofl+v8dmszEBdrtdBAIBpFIpxGIxLBaLO0Om68EsNSLA3W6nM65UKohEImg2m7eSmaxAeZqJD3n6G+QGAh2Px8jlcsjn84KpLMvYbrf6YafTCZPJRN8jads/2D0+YPPjO/bfUldaClSNiQ7hkUwm4Xa74XK5UCgUTMwvl4sYtHYt+YTLzy94/vwJ2q+vt1Ov4nKr8Gg0GgiHw0L0VqtlaRvyoqQL/dT/p+D9ScE7pF6v673NyzZ2ymg0utvGmNBvm728ZUVRxKC2W61WApj/MILBIBwOBzKZjChdoo1MU3WQ14ODGNuLjN5ut+Hz+ZBIJOD3+zGbzayN/V4QeKlUEl4kSSQq56OD68hZcz/2ej0x5+t/AQyL7fdOJ6hnAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 06 01 13&quot;
+        title=&quot;&quot;
+        src=&quot;/static/08973d5115085897ab41a11cd45590e9/fcda8/2020-03-20-06-01-13.png&quot;
+        srcset=&quot;/static/08973d5115085897ab41a11cd45590e9/12f09/2020-03-20-06-01-13.png 148w,
+/static/08973d5115085897ab41a11cd45590e9/e4a3f/2020-03-20-06-01-13.png 295w,
+/static/08973d5115085897ab41a11cd45590e9/fcda8/2020-03-20-06-01-13.png 590w,
+/static/08973d5115085897ab41a11cd45590e9/efc66/2020-03-20-06-01-13.png 885w,
+/static/08973d5115085897ab41a11cd45590e9/c83ae/2020-03-20-06-01-13.png 1180w,
+/static/08973d5115085897ab41a11cd45590e9/5f652/2020-03-20-06-01-13.png 1302w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h3&gt;Deployment Steps&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Unit Test&lt;/li&gt;
+&lt;li&gt;Build Code&lt;/li&gt;
+&lt;li&gt;Build Image&lt;/li&gt;
+&lt;li&gt;Deploy&lt;/li&gt;
+&lt;li&gt;Success/Failure Notification
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/5f652/2020-03-20-06-05-57.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 27.7027027027027%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBElEQVQY03VROW7DMBCk/+fKz0qVB9hV/hBAUB6QJnCRxkiRA7Z1QAckmYdOToY2FRtBQmCg2dHucEiKaZowr4HcVWfc6JO16PkdPewfM9bXoqoqxHGMIsvwlucI0xRP5FvyJIoQERn5A3vujkfcJwl2ZYmSfTnxwd6A+uPhgGf2irZtobWGIUpirxS+TicUxkBKiaZpoMh31F/qGq/U6r6H7jpI6o6/M9Qn+zLOC/xePJ4dhp9yHMfrv1mniaXBwKROszc9wjqDGc6Ad6K4U8cEhgm05+4kkikVDdLlEvvF4oxitYLmjNvYeYhrsIsp/IP8B5fFBAHUeg212aANw8uD+PlvD3TINM7q/FUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 06 05 57&quot;
+        title=&quot;&quot;
+        src=&quot;/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/fcda8/2020-03-20-06-05-57.png&quot;
+        srcset=&quot;/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/12f09/2020-03-20-06-05-57.png 148w,
+/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/e4a3f/2020-03-20-06-05-57.png 295w,
+/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/fcda8/2020-03-20-06-05-57.png 590w,
+/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/efc66/2020-03-20-06-05-57.png 885w,
+/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/c83ae/2020-03-20-06-05-57.png 1180w,
+/static/cfed1edefa6106f3b9e6ec2e7b60ab6f/5f652/2020-03-20-06-05-57.png 1302w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/CI-CD-Practice/Drone_Practice&quot;&gt;repo&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Setup&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;copy &lt;code class=&quot;language-text&quot;&gt;.env&lt;/code&gt; and input your credentials&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;cp .env.example .env&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;ngrok generate https for testing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;ngrok http 8081&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/f5298aaf14fd6feb9cbace4f3f480e97/02cd5/2020-03-20-19-35-11.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 29.72972972972973%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsSAAALEgHS3X78AAABHElEQVQY03VQaU+DQBRc7qu0hmtLaREh6QGJAj2peCUmFv///xlhSTVo/DB5eTvvzcw+cuOLMF0BJuUgGwSE/EAb8xhTAaqqQFEUyLIMTVPBcdxgboC39xrl/h6Eaxt+SN4lIap6jySJMV/M4boObNsGz/P/CzafDY7HA+I4ad019nhNkGUZ6qca1fmEclugKHOE4YJxqqqyxF3t0O0KggCSFw94eX1Gmm2+Xa6CcZus4w+t4aX5YMJVdYLruUjTDUNe5Njttnisz1ivVyDhbYgoiuB53p/4s5kPwzBAKW1vKMP3fei6jiAIoBs6MxyZIyxXS0wm435PkiSIotjH/SVo2Rb7iqb3p3AchwnZjs2MOt40TUynFJZlsZkvIImRQEoeI58AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 19 35 11&quot;
+        title=&quot;&quot;
+        src=&quot;/static/f5298aaf14fd6feb9cbace4f3f480e97/fcda8/2020-03-20-19-35-11.png&quot;
+        srcset=&quot;/static/f5298aaf14fd6feb9cbace4f3f480e97/12f09/2020-03-20-19-35-11.png 148w,
+/static/f5298aaf14fd6feb9cbace4f3f480e97/e4a3f/2020-03-20-19-35-11.png 295w,
+/static/f5298aaf14fd6feb9cbace4f3f480e97/fcda8/2020-03-20-19-35-11.png 590w,
+/static/f5298aaf14fd6feb9cbace4f3f480e97/02cd5/2020-03-20-19-35-11.png 821w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;replace &lt;code class=&quot;language-text&quot;&gt;DRONE_SERVER_HOST=8e76ad03.ngrok.io&lt;/code&gt; without &lt;code class=&quot;language-text&quot;&gt;https://&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate RPC Secret&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt; openssl rand -hex 16&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;replace &lt;code class=&quot;language-text&quot;&gt;DRONE_RPC_SECRET=&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;generate github credential&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/9a5f98f81e2c7574b2aa32b2c04d577c/2aae8/2020-03-20-19-40-18.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 272px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 257.43243243243245%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAzCAYAAACXICiDAAAACXBIWXMAAAsSAAALEgHS3X78AAAFJklEQVRYw6VXa1MiORTl//+b3Q+zOzVbjjOr46CCoCDIQwUFAXl3p9NJd/rsvWlaGkRoa1N1KulAbu7zJMlFUQRuwvPx+PSC7vMAvZdXdHtD9AdjPHT76NBcfzjG0pU7sSC4tJ5l5RKBnh+gUmuieH2LYvkWhXIV1XoLl1cV5C/Ldj6jQMQaTgZIN0PzOggR0iAIIxobSF/vgVoJpMU88J9raDRbuKlUcfY7D9d1reDYggiHWhgaGJMSKElgr/+Ch8cOCb2F46wFHgK3IAzXAlkDJZY7dmWTjd19Hwz9RwcBuWkVFAZ/VHsSxUcPF/cC5a6EDpPtkMHkRMOVwIB2mIsQg4XGy0xj4gY2IHYzE2+4EyZZnxLITevAmhfrE4NNyYaVwCRtrJYmxOWDh5OGwL+E323Ppk7Wto5yoiGZzLnmqRC+jkG70GYmDswevAuKDTupvJQhhB9i4YVwZPwttcmUOuu0SZv8GJt80hTWfDb75kmu8vETUU5M3kgQu7OxbsgSmFRQ1iY/TzU6Y4X20IcKspm6Trstk9kHdwMfF2TqWUtQcMyKJKKMUd6Rh5s1sc7HQ+W3FeVYQ96hQRoWKDAF0vK256NE5Xc/Usii5LvS44mniSJBEk0SXOtL1Ans06S8zA7fmWhP6b1vWUtwR+lxVRzVXHwpO7jqSIpyZMVlLb+dJs+IbSZOYNkmNNFGYD5RKevEVqQ2JzLsH+K6dmQASb2NaKp2E4RviR1ss42xpfezEZfddzK/+Cgt81xT+f1946BCkf8U2yQ78o+sqeXHKM5DxxJFmK30krCPloFlmoRtXMl+DYjKVsS7I3XMR6XHbHNKLPPjzsWPuovzew95Ypt/qg7lpz7IOHtK7z2ipPTMJ0vv4VWhOVS2b49i9Gf64Pm8pSFWJ1to65fN5nrmOi524pr+H2zzQYvMRh5u4BDbcDBYO849zscr0nLsBHvN/uCgD+1CvjmwYPYfs06L2HvqxgEznyq9dwS7yTqJaRmO0XVQymQmlxwfA2wu5yB/Lzxz8I6zUXoslIt7RqaN6G7DJnKFvMw1XpfaHvp8Ambkw9gHbHKUMEgqYTnCiPYTbJSwDa3Jpf1UfFL4eivw/c7DEeG44aHS15ny0AaM+pzpjOCfViHP63DPalj+qkH8juGtepmvw09wvoXVnMzXoH5VkdOFJuRoCl8pSCHgE+QH8FwBsQtLB15E9PatgFxQvodxPPjkh5nrU0QV9QoLobCkMX9PHZ8uo4rojDZVmph8C9IH34DUzxsSWGojnLvwA42T+hx/lab4Wp7hj8IEZ40FjiozfKG5PwtTXLQXUMqnN4m0D6U3uB4EBc4/LpPAqzYMTbLrPcp2QeDe0XHP8OnPCxXYObZEboPPI9bwxzVyqvIAj5wpSi24hTuIQiNGsfE2di/vIK+ads6hsXNRp77+1i/PKXjlFsSXPEWZnw4zB8uXCQb3PYwe+hZDQvI97tBbr/mEIX1PukPMe2PMeq/Ux+DxkuZCIdd56FGm39y1cXx2gfNSFflSBaeXJZRuG7im+ZOLEn7mi/Y/QvPtVmNJTzKHwGOxor+YHAge+VGSn2wkKWqa0ijUmnqNgMaG/BTo+Dc3HRCCK3y73r71Ep5j1hDTObTjwFERvVcCPI41BvO479JBxZQ2XxHFAXIggYTZfRdu5xlzYn2+xfLLqkVnTOVZ2pcVMxDfxtaPSux466Um+PrBPR+pVJ27EcWH+jvwuvQde5viTfpJZlLYcwxw+w9rDnrOuG5HfAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 19 40 18&quot;
+        title=&quot;&quot;
+        src=&quot;/static/9a5f98f81e2c7574b2aa32b2c04d577c/2aae8/2020-03-20-19-40-18.png&quot;
+        srcset=&quot;/static/9a5f98f81e2c7574b2aa32b2c04d577c/12f09/2020-03-20-19-40-18.png 148w,
+/static/9a5f98f81e2c7574b2aa32b2c04d577c/2aae8/2020-03-20-19-40-18.png 272w&quot;
+        sizes=&quot;(max-width: 272px) 100vw, 272px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/86116318c160807995417d3829a9f8ca/6d74e/2020-03-20-19-40-59.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 29.054054054054056%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsSAAALEgHS3X78AAAAp0lEQVQY042RiwrDIAxF/f+/HOy9da7VGjXRu1S2sRZGGxBF4uGeaBwJnHN49gNyzvitWuvqWvabzmWExKhFIKUgkMfDdogxboJOQa73Dpm59Zv96Ybek8Lac5x3DseDQxKZaKtAVlBSs09aY32G9Qyv6hPQXhLsg8Fzm03VlOcX0KQMigFEhBAIYwgYKWGg8k1R/8y5JVwqFHUX1ZW2v886WynbPugFxXTZheefSycAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 19 40 59&quot;
+        title=&quot;&quot;
+        src=&quot;/static/86116318c160807995417d3829a9f8ca/fcda8/2020-03-20-19-40-59.png&quot;
+        srcset=&quot;/static/86116318c160807995417d3829a9f8ca/12f09/2020-03-20-19-40-59.png 148w,
+/static/86116318c160807995417d3829a9f8ca/e4a3f/2020-03-20-19-40-59.png 295w,
+/static/86116318c160807995417d3829a9f8ca/fcda8/2020-03-20-19-40-59.png 590w,
+/static/86116318c160807995417d3829a9f8ca/efc66/2020-03-20-19-40-59.png 885w,
+/static/86116318c160807995417d3829a9f8ca/6d74e/2020-03-20-19-40-59.png 1085w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/bf2cfb245bb1d355ac9a358a88c4c3e6/91e7e/2020-03-20-19-41-17.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 91.8918918918919%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsSAAALEgHS3X78AAAB1klEQVQ4y5VUi3KjMBDr/39h73ppHkAghIDBvF867aa+lJBmcp7RmBCjkVa7fgPXPM+YiHG6ohsGdP2Anmj7Xp8F4zjKaT3/E94c4SmOEUYRYu4DCVdrfk60IjR5DmMMssygbVvYskJqcmR5gapu8OpSwmmaUBQFfn/8gef5qOsaUXzGZrfHZrtHeIrRSxm6nmW4QYQ4QSuFSZLg/dcHNp9bWGv147ppSN6gqmoqLhUllbv9O+FCobwQhVmWKUThq+s72YIwOIbw/QB+cIRl3VwpJqZ+3dd4qND9OIZM+JzQZqshNG33D9IyLUsg6NzOd08t57RsmGpOdUVhmXqhKGz5tE1+JAyjEz63O7XdsW3GL0ty9mZ7Xjw/tSxtst0dcPACHEjq+UdVZ8t6Zfsly9LYl0uqjX1mC2W0XzFtKYGM4H2/PSJbEEooknDIfX/wtNfGccLA+b3/6L5lHiqUZMVeWXGXRiZyW+n7QS8F/F8olvW6pJlC7EoJxG7CMhjty9dU3lKmVZljP2AonoeA9rvmeinMq5TnharFLLs/zkmq6UrKfhBewemRhNtuuIOk3Cvxw9vmOsuWpBe162ynnGu5wiLTET2CrMfJtFqOlN0gcHenU/gX+KZ/KJ5hywAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 19 41 17&quot;
+        title=&quot;&quot;
+        src=&quot;/static/bf2cfb245bb1d355ac9a358a88c4c3e6/fcda8/2020-03-20-19-41-17.png&quot;
+        srcset=&quot;/static/bf2cfb245bb1d355ac9a358a88c4c3e6/12f09/2020-03-20-19-41-17.png 148w,
+/static/bf2cfb245bb1d355ac9a358a88c4c3e6/e4a3f/2020-03-20-19-41-17.png 295w,
+/static/bf2cfb245bb1d355ac9a358a88c4c3e6/fcda8/2020-03-20-19-41-17.png 590w,
+/static/bf2cfb245bb1d355ac9a358a88c4c3e6/91e7e/2020-03-20-19-41-17.png 692w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add webhook to the repo&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/2ca317e5615a95ed334c25a947c9ae10/ee9b6/2020-04-09-13-45-40.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 47.972972972972975%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsSAAALEgHS3X78AAABaElEQVQoz3VRa2/DIAzk///H7UPXpW0a3iSBEHKzoVRV1SGdbB53nG0Rd2AjpGc8sOaO8hGpHBVx73nBVkqNYjQRpyliUC3+qoSV1HPesT2Q99e8YJIa46SwrLHmYV4gtUEIM4QLC7RbMGkP7dcWrccaEzzdMcnQfl5iJXoiWdfeWGMw/nxjtppMbIgEscZc3eScse8tNuJShZjMouwubbmSWs7YkFKiPXG5bDoXo8tQIaNQL46DAWhjcbmNOA8XnM4DuXFw1VmA8zMMfcLg3PpAeYCyMwJVIUabIMNeBcvRREcd8PWroAyRiGhJ0BBatFDUL6k0NEWtNaRxuKgF80olD8MVd+XAq5BtFuSfpTK1Fey4O+/4b/E7cXcbJp95+yAe1cmVSpZS4T5JzNTTOmnqYQd//sph8Jm4mQ136iPqQbvgMq/XG006Pp3zwD456ujvBA9kSaUJPi49NZrBE+8/d8F3kXfBP0cfCznXTlbIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 09 13 45 40&quot;
+        title=&quot;&quot;
+        src=&quot;/static/2ca317e5615a95ed334c25a947c9ae10/fcda8/2020-04-09-13-45-40.png&quot;
+        srcset=&quot;/static/2ca317e5615a95ed334c25a947c9ae10/12f09/2020-04-09-13-45-40.png 148w,
+/static/2ca317e5615a95ed334c25a947c9ae10/e4a3f/2020-04-09-13-45-40.png 295w,
+/static/2ca317e5615a95ed334c25a947c9ae10/fcda8/2020-04-09-13-45-40.png 590w,
+/static/2ca317e5615a95ed334c25a947c9ae10/efc66/2020-04-09-13-45-40.png 885w,
+/static/2ca317e5615a95ed334c25a947c9ae10/ee9b6/2020-04-09-13-45-40.png 1041w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h3&gt;Start the App&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;docker-compose up -d&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And navigate to &lt;code class=&quot;language-text&quot;&gt;localhost:8081&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;How to write &lt;code class=&quot;language-text&quot;&gt;.drone.yml&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;// TODO&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; pipeline
+&lt;span class=&quot;token key atrule&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker &lt;span class=&quot;token comment&quot;&gt;# 在 running docker in pipeline&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; clone &lt;span class=&quot;token comment&quot;&gt;# The name you can define yourself&lt;/span&gt;
+
+&lt;span class=&quot;token key atrule&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token comment&quot;&gt;# Task 1&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; host
+    &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; alpine
+    &lt;span class=&quot;token key atrule&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; cat /etc/hosts
+    &lt;span class=&quot;token key atrule&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;success&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; failure&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;token comment&quot;&gt;# Task 2&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; echo
+    &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; plugins/git
+    &lt;span class=&quot;token key atrule&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; echo &quot;78523&quot;
+    &lt;span class=&quot;token key atrule&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; master
+  &lt;span class=&quot;token comment&quot;&gt;# Task 3&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; dev_action
+    &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; plugins/git
+    &lt;span class=&quot;token key atrule&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; echo &quot;111111&quot;
+    &lt;span class=&quot;token key atrule&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; develop
+
+&lt;span class=&quot;token key atrule&quot;&gt;trigger&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; master
+  &lt;span class=&quot;token key atrule&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; push&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Deploy to S3&lt;/h2&gt;
+&lt;h4&gt;refs&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://medium.com/dailyjs/a-guide-to-deploying-your-react-app-with-aws-s3-including-https-a-custom-domain-a-cdn-and-58245251f081&quot;&gt;https://medium.com/dailyjs/a-guide-to-deploying-your-react-app-with-aws-s3-including-https-a-custom-domain-a-cdn-and-58245251f081&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://plugins.drone.io/drone-plugins/drone-s3/&quot;&gt;http://plugins.drone.io/drone-plugins/drone-s3/&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;IAM&lt;/h4&gt;
+&lt;p&gt;get access key id and access secret key
+
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/6add7c45a6777356659a3ca4e39d6a94/97655/2020-04-09-11-20-03.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 62.83783783783784%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsSAAALEgHS3X78AAABy0lEQVQ4y3WSyY6cMBCG/f5PkxfILadIuURRDz2CTNjMjo2hWdqYPy730KKVYOlTFYWrXBuTUkIIga7rnGzbFmRrmgZlWTqbMQbbtv0HPNkPK4oCnHNHkiQuEJ11XZ+BTs8h4v4IowwoE4KCk6zrGn3fu0z3jMlGd6XFya6HNhv0SpjPxw0YZZTnOcZxxDAMTmqtX4LtzNOE70GHb+8tfC7g5z38TCEoRyzroxJGZfp+gMleVkq5gHQo2zAMXSvoQXpM6zu+XiS+/Cjw0+fwUoUrV/CyEdPdUA/ApBTgaYKyyJ+tof7tvdub7+y2LFei9Z3XA/owlLRo4H1whGnhyqIsl2XBTMyz05eDPtkKlOpsjxV69YnVyY9gYZLh1/sfXIPQlUjlCdE+V+gFa6NWRFGEKI6tPGC/YwvrOzu1OkfoX+C9eQjj1E2aZzkqmnj1SlNXaJv6FFYPK5pOQeQ+rvmES3rDG7/hdzmB/qnZoJsM1PSQTp/PYWW/opIKdRbYQKMLRkTNAmmd+2U7ODx0OZ7DaBnNMmBpP5A0I9LmhqwdEdc35GJE1dlM1YNSThD9bEdvTmHGbruxa7JqO0294u4wTs73f6E7zueEv/Cc5W0eH73kAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 09 11 20 03&quot;
+        title=&quot;&quot;
+        src=&quot;/static/6add7c45a6777356659a3ca4e39d6a94/fcda8/2020-04-09-11-20-03.png&quot;
+        srcset=&quot;/static/6add7c45a6777356659a3ca4e39d6a94/12f09/2020-04-09-11-20-03.png 148w,
+/static/6add7c45a6777356659a3ca4e39d6a94/e4a3f/2020-04-09-11-20-03.png 295w,
+/static/6add7c45a6777356659a3ca4e39d6a94/fcda8/2020-04-09-11-20-03.png 590w,
+/static/6add7c45a6777356659a3ca4e39d6a94/97655/2020-04-09-11-20-03.png 819w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h4&gt;policy&lt;/h4&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/63678c6a46b243ffc0f25a8bedef2710/9685e/2020-04-09-11-17-47.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 51.35135135135135%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsSAAALEgHS3X78AAABSElEQVQoz31S7W7DIAzM+7/PnmXaj06qqnZTmhBCMBA+crPJ2qVdNktHbAjns00TY0SvBihtoAaDMCfMcUWYI+R8jQtSXpBSQc6Jkb/x4y/LgiZ6wvVyRHs5oT2f0LUtkxPDolMGehzRDxbKzCCfYF2Ec54R4H0AVd8hhLASppRhJgdHFl7gLMjK17G6GSmKSlGbK/wdpcYulLUSVi7WLCWjJM5uNIzumXiCZULJKMZJK3jdYN+qwsxkbuwQJoWgW9hxYLK5EjoukTyr8LHGN8jFPawKNzknS7h8dtwXx/3x90ZvFTzHz9ZsN62dYMwIpXpMk2HfgMixz30lqhPfI/5FKD2Ty1prtFeFa0/o9DoUeTK2TtShlPJA+KdC+fFWHvGkD4c3nM4fsMRlp4TCZ/Iangl3FW5mVFdPHY6vLzD9+8P+f33b2hdvEw+HIo3obQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 04 09 11 17 47&quot;
+        title=&quot;&quot;
+        src=&quot;/static/63678c6a46b243ffc0f25a8bedef2710/fcda8/2020-04-09-11-17-47.png&quot;
+        srcset=&quot;/static/63678c6a46b243ffc0f25a8bedef2710/12f09/2020-04-09-11-17-47.png 148w,
+/static/63678c6a46b243ffc0f25a8bedef2710/e4a3f/2020-04-09-11-17-47.png 295w,
+/static/63678c6a46b243ffc0f25a8bedef2710/fcda8/2020-04-09-11-17-47.png 590w,
+/static/63678c6a46b243ffc0f25a8bedef2710/efc66/2020-04-09-11-17-47.png 885w,
+/static/63678c6a46b243ffc0f25a8bedef2710/c83ae/2020-04-09-11-17-47.png 1180w,
+/static/63678c6a46b243ffc0f25a8bedef2710/9685e/2020-04-09-11-17-47.png 1336w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h4&gt;S3 plugin&lt;/h4&gt;
+&lt;p&gt;Because we are going to deploy the content of &lt;code class=&quot;language-text&quot;&gt;build&lt;/code&gt; folder, we use &lt;code class=&quot;language-text&quot;&gt;plugins/s3-sync&lt;/code&gt; instead of &lt;code class=&quot;language-text&quot;&gt;plugins/s3&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt; &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; deploy
+  &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; plugins/s3&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;sync&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;bucket&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &amp;lt;bucket_name&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;access_key&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;from_secret&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; aws_access_key_id
+    &lt;span class=&quot;token key atrule&quot;&gt;secret_key&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;from_secret&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; aws_secret_access_key
+    &lt;span class=&quot;token key atrule&quot;&gt;region&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; us&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;west&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; build
+    &lt;span class=&quot;token key atrule&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; /&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Use cases&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;create-react-app to AWS S3
+&lt;a href=&quot;https://github.com/c1495616js/drone_react_ec2&quot;&gt;repo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Drone Plugins&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Plugins are just Docker containers which means you can write plugins in any programming language that runs inside a container. You can even create plugins using simple bash scripting.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4&gt;4 Steps to writing Plugins&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;write the code&lt;/li&gt;
+&lt;li&gt;build docker image&lt;/li&gt;
+&lt;li&gt;deploy to docker hub&lt;/li&gt;
+&lt;li&gt;testing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;example&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/CI-CD-Practice/drone_plugin_test&quot;&gt;repo&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token shebang important&quot;&gt;#!/bin/sh&lt;/span&gt;
+
+&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  -X &lt;span class=&quot;token variable&quot;&gt;${PLUGIN_METHOD}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  -d &lt;span class=&quot;token variable&quot;&gt;${PLUGIN_BODY}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;token variable&quot;&gt;${PLUGIN_URL}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Build Images&lt;/h2&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d3a6d3b801271726bdd0e1b95444ccd1/78958/2020-03-20-06-26-28.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 47.972972972972975%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAABbklEQVQoz42SzW6CQBDHeR4ewsRTbz6F79ED6SP02F48eeylR469VIMRA/HgB1YCBQ0qUL6Ev8zoJrSatpNsdnd29j+/nVkpTVNsNhs0rSovc4UrcxwH+/3+m2+73aLf7/Nams1mGI1GWK/X8L1P+IcYyfsrwqcHJC+P+KoTfqxWoMSDwQCyLKPT6cD3fRaPogjD4RCtVqsGqCDN53NomsaHWX0pSgsUjobo/g7F2zPyOmsUHpDnOYt0u10oioLj8YgwDJlKVVW0222UZQmJcKfTKYqiwG9WXd5PpBRLe+EzDAO9Xg9JkkAiJymLgPMouX4VF/PsI0KKE0aE5KsaheYn36IQImJPdaLsRJZlGQvROo5j9osE3JQmWVO0OdMl6uxyucRisQA1ktYkSiUQcVeEt2hpFl9rMplgPB5zV3e7HZ8LQhH/L0G65Hkei+m6zt/HNE1O1CT8U1AMqmEQBLBtm7+X67qwLIupfxKeAPJl9y3XRF4AAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 03 20 06 26 28&quot;
+        title=&quot;&quot;
+        src=&quot;/static/d3a6d3b801271726bdd0e1b95444ccd1/fcda8/2020-03-20-06-26-28.png&quot;
+        srcset=&quot;/static/d3a6d3b801271726bdd0e1b95444ccd1/12f09/2020-03-20-06-26-28.png 148w,
+/static/d3a6d3b801271726bdd0e1b95444ccd1/e4a3f/2020-03-20-06-26-28.png 295w,
+/static/d3a6d3b801271726bdd0e1b95444ccd1/fcda8/2020-03-20-06-26-28.png 590w,
+/static/d3a6d3b801271726bdd0e1b95444ccd1/efc66/2020-03-20-06-26-28.png 885w,
+/static/d3a6d3b801271726bdd0e1b95444ccd1/c83ae/2020-03-20-06-26-28.png 1180w,
+/static/d3a6d3b801271726bdd0e1b95444ccd1/78958/2020-03-20-06-26-28.png 1320w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;h2&gt;Next Step? Drone + Kubernetes&lt;/h2&gt;
+&lt;p&gt;// TODO&lt;/p&gt;
+&lt;h2&gt;Who use drone&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://stackshare.io/drone-io&quot;&gt;https://stackshare.io/drone-io&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[SSH Key for new Account]]></title><description><![CDATA[1. Generate New RSA Key 2. Config file in  Alias in .zshrc Refs From Scratch: https://docs.github.com/en/github/authenticating-to-github…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/ssh_key/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/ssh_key/</guid><pubDate>Fri, 21 Feb 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. Generate New RSA Key&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;ssh-keygen -t rsa -C &amp;lt;email&amp;gt; -f &amp;lt;file name&amp;gt;
+
+# ex:
+ssh-keygen -t rsa -C &amp;quot;jerry@freshworks.io&amp;quot; -f id_rsa_fw&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;2. Config file&lt;/h2&gt;
+&lt;p&gt;in &lt;code class=&quot;language-text&quot;&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa_jerry_github (file name from step 1)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Alias in .zshrc&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;alias fw-git-clone=&amp;#39;git clone --config user.name=&amp;quot;jerry&amp;quot; --config user.email=jerry@freshworks.io $@&amp;#39;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Refs&lt;/h2&gt;
+&lt;p&gt;From Scratch:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent&quot;&gt;https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Compact Folder in Vscode]]></title><description><![CDATA[Sometimes I don’t like the folder compact like this way,
+here’s the way to disable it in Vscode. in ,
+searching , then uncheck it.  There…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/compact-folder/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/compact-folder/</guid><pubDate>Wed, 12 Feb 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Sometimes I don’t like the folder compact like this way,
+here’s the way to disable it in Vscode.&lt;/p&gt;
+&lt;p&gt;in &lt;code class=&quot;language-text&quot;&gt;Preferences/Settings&lt;/code&gt;,
+searching &lt;code class=&quot;language-text&quot;&gt;compactfo&lt;/code&gt;, then uncheck it.&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/23622a40d4d6d3cb39afa182968913ed/c7dcc/2020-02-12-11-50-02.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 36.486486486486484%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsSAAALEgHS3X78AAAA/UlEQVQoz6WQSW6DQBBF+xhmbmZiRgnYIDBjhySKcoLk/sf4ocqyxMKrZPHE7xL69VQijmOM44hpmtC2Leq6/hciDEMMw4C+73lQVRXKsvwzwnEcFEUBz/O4LMsyGIYB/UDTdVw0DRddg37kM/TPM7gwTVMkSQKydV0XNJMHsevjGkRI/JAXEkEQ8Ne27acI0zS5cJ5nviEVGccslh7e0wZfs8LP+IZ5uGGc7rfuug5SSoYEzgjLstgoiiL4vs/ZsO6FQ1Igz3N8q098qB3qVWFdV16+bRuWZeGslMK+7/wWpEmlZEpQJqTtoAle0PgJmvDK2x9GD7uzJZ2B8i/fDNEGYcoKEAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 02 12 11 50 02&quot;
+        title=&quot;&quot;
+        src=&quot;/static/23622a40d4d6d3cb39afa182968913ed/fcda8/2020-02-12-11-50-02.png&quot;
+        srcset=&quot;/static/23622a40d4d6d3cb39afa182968913ed/12f09/2020-02-12-11-50-02.png 148w,
+/static/23622a40d4d6d3cb39afa182968913ed/e4a3f/2020-02-12-11-50-02.png 295w,
+/static/23622a40d4d6d3cb39afa182968913ed/fcda8/2020-02-12-11-50-02.png 590w,
+/static/23622a40d4d6d3cb39afa182968913ed/c7dcc/2020-02-12-11-50-02.png 641w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;There you go:&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/4d82e9ebee5b6474973b99cb1bb32de5/6a451/2020-02-12-11-51-30.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 232px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 61.48648648648649%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsSAAALEgHS3X78AAAB+klEQVQoz42Sy27TQBSG/Q6sUHpJfbcTX8f3xrETJ3URSgVRSdOSRogSVAkqIcSCJRtW7HkMtjzez8yYtGkbIRafz4x15p9/zjmCoqiQZAUBCaB2umj9/I7w5h3E1i4uphWuF8+wOq9BPAsyzWP5/0JgH5aoqRpESYZSV1BDArejIQldBFSol/jIUwJD1/nl/yXIomVZ8LsOzt+8B4kilJmP1y+HMA0d7QNpq8BD143g302HPtlyPcyvPqJrxah6BC+Oc+iaxgUPRJnD1oy1mCw/ELy7SYGqmHDcHUxnJlRN58+MiIPQt29hpUgpKi3TI4eyLPOfEq2fpmvUJcHoWMKv3zOcTCqcTfpYno7w9mzMm7M8rXA5HfJ9t2NAFBunjY4MwXVD3BHAcQhsmyCKS0RJTrsfUccBPC/k2E5AITyX7e+fDyGkaYk1SVKgLGsMB0e4XN3g87cfeF7X+PphgS/XF/i0mqPoV8iy8h6bGoJt+9jEcZpISIwozWFTJ1kcw/epM9ujzfJobW0YpgPdaNg8L7DaPYLVZHcHT8sxnoxPkHsmlq9GWNDazSYFruZjGvt0pAZ0Cg55Hddnhe0DqkEVRezlQ7TKIzimhlERY9ALcRj7qPKID3qRBTxudnq7IHPIIhVlwpKkYG+fXtAW+fyx9X5bumU9dow/c9B6A1Los4oAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 02 12 11 51 30&quot;
+        title=&quot;&quot;
+        src=&quot;/static/4d82e9ebee5b6474973b99cb1bb32de5/6a451/2020-02-12-11-51-30.png&quot;
+        srcset=&quot;/static/4d82e9ebee5b6474973b99cb1bb32de5/12f09/2020-02-12-11-51-30.png 148w,
+/static/4d82e9ebee5b6474973b99cb1bb32de5/6a451/2020-02-12-11-51-30.png 232w&quot;
+        sizes=&quot;(max-width: 232px) 100vw, 232px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Support IE >= 9]]></title><description><![CDATA[Steps I use  to run my react app. And it already includes  In order to support IE 9, 11 add  in  of  file.  remove node_modules in src/index…]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/support-ie/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/support-ie/</guid><pubDate>Mon, 10 Feb 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Steps&lt;/h2&gt;
+&lt;p&gt;I use &lt;code class=&quot;language-text&quot;&gt;react-scripts&lt;/code&gt; to run my react app.&lt;/p&gt;
+&lt;p&gt;And it already includes &lt;code class=&quot;language-text&quot;&gt;react-app-polyfill&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In order to support IE 9, 11&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;add &lt;code class=&quot;language-text&quot;&gt;ie &amp;gt;=9&lt;/code&gt; in &lt;code class=&quot;language-text&quot;&gt;browserslist&lt;/code&gt; of &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt; file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/JakYNG0.png&quot;&gt;&lt;/p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;remove node_modules&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;rm -rf node_modules&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;in src/index.tsx&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;import &amp;#39;react-app-polyfill/ie9&amp;#39;
+import &amp;#39;react-app-polyfill/ie11&amp;#39;
+import &amp;#39;react-app-polyfill/stable&amp;#39;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;npm install again&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm i&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://dotblogs.com.tw/wasichris/2019/06/20/234252&quot;&gt;https://dotblogs.com.tw/wasichris/2019/06/20/234252&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Dev Envrionment(keep update)]]></title><description><![CDATA[Vscode plugins -Paste Image]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/vscode-plugin/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/vscode-plugin/</guid><pubDate>Mon, 10 Feb 2020 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Vscode&lt;/h2&gt;
+&lt;h3&gt;plugins&lt;/h3&gt;
+&lt;p&gt;-&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image&quot;&gt;Paste Image&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[gyp fail]]></title><description><![CDATA[xcode:  remove  or  Ref https://github.com/nodejs/node-gyp/issues/1464]]></description><link>https://storyhub-minimal-tarex.redq.now.sh/gyp-fail/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/gyp-fail/</guid><pubDate>Sun, 09 Feb 2020 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
+&lt;li&gt;xcode:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/fa7c7dae780a6eb7cb0bdd6bc2c13963/27b7a/2020-02-12-11-42-39.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 68.24324324324324%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsSAAALEgHS3X78AAACSUlEQVQ4y6WTW3PaMBCF+RuNsSV8kWz5ChgIKZkQh0vCnULThGaSNG2nL31o+v9nTteGEF46nWkezkhaSZ+OVqvSz8cHjO/v0LpcYz6do3c1wsVojOyij6zXx3S2xGbzGaPxjGIDXFE7ni4wHI4wX66xoPHV5Zjic3TP+yg9/3rG6uk3jj/8wN3tLSarNSabTxjSogktzmHfv30l+ACDyxEmswVmixWWBHt4fMLj/Rd8vL7Bcn2N84yAcVKFKyVCpSCkguf6cIUHKV0oj8YBzasIcVxFrZYiCCJ4XlBIugpBGBfyPL+YKyVJDWWdgzELQriwHRe+HyJMWmBWCG4pMFNSXEKpEKbpwGAVcG7BMCo40nSUy6zo84qFUkQn5wHOzGKDJJdpvYGTsyFs/xiWacK2BSzLgUmybQnGzQIQBDHOuhmarfYWyHfAd5qBI52hbHBwcuAHIaL0PQwnhs44dFqoEyR3UKnYWyC5FNLbpoGuvAcmBPS5gCJFDrnzE5zWW+ie9BCpJiLbRSwUajKgXKsCygiWQ3UyoJUNShmDTmkrgI2kjsxP0a420Y4bBbDb6mBMJTDJBpj3huicTtCJMjrYoptwGCR9p9xZrj0wraZo2SF8y0VoeQhMF6lK0E4aaIZ1nCQpElVDU9BrcxvaAeRQe2BeDrZh0WIByR1qHQhmQxivknkFEOxl4z+BR5pRlI5WiBX9Q2m79gWW5+6vwPyV9V0dvUWvwCiBRg7zQF6P/6ftXka1XKrW6nDoh0iqKfEW0Xd16Sv+AfR0pg205oJ+AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;2020 02 12 11 42 39&quot;
+        title=&quot;&quot;
+        src=&quot;/static/fa7c7dae780a6eb7cb0bdd6bc2c13963/fcda8/2020-02-12-11-42-39.png&quot;
+        srcset=&quot;/static/fa7c7dae780a6eb7cb0bdd6bc2c13963/12f09/2020-02-12-11-42-39.png 148w,
+/static/fa7c7dae780a6eb7cb0bdd6bc2c13963/e4a3f/2020-02-12-11-42-39.png 295w,
+/static/fa7c7dae780a6eb7cb0bdd6bc2c13963/fcda8/2020-02-12-11-42-39.png 590w,
+/static/fa7c7dae780a6eb7cb0bdd6bc2c13963/27b7a/2020-02-12-11-42-39.png 804w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;remove &lt;code class=&quot;language-text&quot;&gt;package-lock.json&lt;/code&gt; or &lt;code class=&quot;language-text&quot;&gt;yarn.lock&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Ref&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/nodejs/node-gyp/issues/1464&quot;&gt;https://github.com/nodejs/node-gyp/issues/1464&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Example]]></title><link>https://storyhub-minimal-tarex.redq.now.sh/example/</link><guid isPermaLink="false">https://storyhub-minimal-tarex.redq.now.sh/example/</guid><pubDate>Wed, 01 Jan 2020 00:00:00 GMT</pubDate><content:encoded></content:encoded></item></channel></rss>
