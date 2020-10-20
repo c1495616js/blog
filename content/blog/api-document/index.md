@@ -1,8 +1,7 @@
 ---
-title: Generating Code Report Automatically
+title: Api Document
 date: "2020-10-19"
-description: We want to know how healthy about the codes and how database looks like.
-If we can have some tool automatically generating these reports while pipeline.
+description: Generating Code Report Automatically
 tags: ["document", "typedoc", "schemaspy", "sonarqube", "CI/CD"]
 cover: "./preview.png"
 ---
